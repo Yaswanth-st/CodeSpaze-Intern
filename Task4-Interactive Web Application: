@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz App</h1>
+        <div id="question-container">
+            <h2 id="question">Question goes here</h2>
+            <button class="btn" onclick="selectAnswer(0)">Option 1</button>
+            <button class="btn" onclick="selectAnswer(1)">Option 2</button>
+            <button class="btn" onclick="selectAnswer(2)">Option 3</button>
+            <button class="btn" onclick="selectAnswer(3)">Option 4</button>
+        </div>
+        <button class="btn hidden" id="next-button" onclick="nextQuestion()">Next</button>
+        <h2 id="result" class="hidden"></h2>
+    </div>
+
+    <script>
+        const quizData = [
+            { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: 2 },
+            { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], answer: 1 },
+            { question: "What is 5 + 3?", options: ["5", "8", "12", "7"], answer: 1 }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            document.getElementById("result").classList.add("hidden");
+            document.getElementById("next-button").classList.add("hidden");
+            let q = quizData[currentQuestion];
+            document.getElementById("question").textContent = q.question;
+            let buttons = document.querySelectorAll(".btn");
+            buttons.forEach((btn, index) => {
+                btn.textContent = q.options[index];
+                btn.disabled = false;
+                btn.style.background = "#3498db";
+            });
+        }
+
+        function selectAnswer(index) {
+            let q = quizData[currentQuestion];
+            let buttons = document.querySelectorAll(".btn");
+            buttons.forEach(btn => btn.disabled = true);
+            if (index === q.answer) {
+                score++;
+                buttons[index].style.background = "green";
+            } else {
+                buttons[index].style.background = "red";
+                buttons[q.answer].style.background = "green";
+            }
+            document.getElementById("next-button").classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("question-container").classList.add("hidden");
+                document.getElementById("next-button").classList.add("hidden");
+                document.getElementById("result").textContent = `You scored ${score} out of ${quizData.length}!`;
+                document.getElementById("result").classList.remove("hidden");
+            }
+        }
+        
+        loadQuestion();
+    </script>
+</body>
+</html>
